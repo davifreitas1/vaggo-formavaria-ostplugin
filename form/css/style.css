@@ -1,0 +1,339 @@
+/* --- Variáveis Globais --- */
+:root {
+    --recife-red: #d92d20;
+    --recife-blue: #0c3b65;
+    --light-gray-bg: #f3f4f6;
+    --accent-blue: #3498db;
+    --success-green: #27ae60;
+    --error-red: #e74c3c;
+    --text-gray: #374151;
+    --border-gray: #d1d5db;
+}
+
+/* --- Estilos Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Rubik', sans-serif;
+}
+
+main {
+    flex-grow: 1;
+    transition: filter 0.3s ease-in-out;
+}
+
+/* --- Componentes --- */
+.logo {
+    background: url("../img/marca-vaggo.svg") no-repeat center/contain;
+}
+
+.section-title {
+    background-color: var(--light-gray-bg);
+    color: var(--text-gray);
+    padding: 8px 12px;
+    margin: 20px 0 24px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* Agrupamento de estilos para campos de formulário */
+.input-field, .radio-input, .file-input {
+    display: block;
+    width: 100%;
+    font-size: 1.125rem;
+    background-color: transparent;
+    border: 0;
+    appearance: none;
+}
+
+.input-field {
+    padding: 1rem 0.25rem 0.25rem;
+    border-bottom: 2px solid var(--border-gray);
+}
+
+.input-field:focus {
+    outline: none;
+    ring: 0;
+    border-color: var(--accent-blue);
+}
+
+.input-label {
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    z-index: 10;
+    transform-origin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+    transition: transform 0.3s, color 0.3s;
+    pointer-events: none;
+}
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+    transform: translateY(-1rem) scale(0.75);
+}
+
+.input-field:focus + .input-label {
+    color: var(--accent-blue);
+}
+
+/* Estilos para campos inválidos */
+.input-field.invalid-field {
+    border-color: var(--error-red);
+    animation: shake 0.4s;
+}
+
+.input-field.invalid-field + .input-label {
+    color: var(--error-red);
+}
+
+.error-message {
+    display: none;
+    color: var(--error-red);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.radio-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    padding: 0;
+    border: 2px solid var(--border-gray);
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.radio-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.4);
+}
+
+.radio-input:checked {
+    border-color: var(--recife-blue);
+}
+
+.radio-input:checked::after {
+    content: '';
+    display: block;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    background-color: var(--recife-blue);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-label {
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.25rem;
+}
+
+.file-input {
+    margin-top: 0.5rem;
+    padding: 0;
+    color: #64748b;
+    border: none;
+}
+
+.file-input::file-selector-button {
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background-color: #e0f2fe;
+    color: var(--accent-blue);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-input::file-selector-button:hover {
+    background-color: #bae6fd;
+}
+
+.submit-button {
+    background-color: var(--recife-blue);
+    color: white;
+    padding: 12px 60px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #082a49;
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- Feedback Overlay e Animações --- */
+.feedback-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: var(--recife-blue);
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+#loading-indicator,
+#success-message,
+#error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+    border: 6px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--recife-blue);
+    border-radius: 50%;
+    animation: spin 1s ease infinite;
+}
+
+.checkmark, .cross {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+}
+
+.checkmark {
+    stroke: var(--success-green);
+    animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+.cross {
+    stroke: var(--error-red);
+    animation: fill-error 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+.checkmark-circle, .checkmark-check, .cross-circle, .cross-path {
+    fill: none;
+    stroke-miterlimit: 10;
+}
+
+.checkmark-circle, .cross-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-circle {
+    stroke: var(--success-green);
+}
+
+.cross-circle {
+    stroke: var(--error-red);
+}
+
+.checkmark-check, .cross-path {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+#location-fields-wrapper.company-hidden {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* --- Keyframes para Animações --- */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes stroke {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes scale {
+    0%, 100% { transform: none; }
+    50% { transform: scale3d(1.1, 1.1, 1); }
+}
+
+@keyframes fill {
+    to { box-shadow: inset 0 0 0 50px white; }
+}
+
+@keyframes fill-error {
+    to { box-shadow: inset 0 0 0 50px white; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+/* --- Classes Utilitárias --- */
+main.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+}
+
+.hide {
+    display: none !important;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

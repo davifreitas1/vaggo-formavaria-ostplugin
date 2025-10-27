@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Avaria de Veículo</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body
+    class="bg-gray-200 py-4 md:py-10">
+    <main
+        class="max-w-4xl mx-auto bg-white p-4 md:p-8 shadow-lg relative">
+        <header
+            class="flex flex-row justify-between items-center pb-4 border-b-2 border-gray-400">
+            <h1
+                class="text-3xl md:text-4xl font-bold text-gray-800">
+                FORMULÁRIO PARA AVARIA DE VEÍCULO
+            </h1>
+            <div
+                class="logo w-32 md:w-48 h-32 flex-shrink-0"></div>
+        </header>
+
+        <form
+            id="avaria-form"
+            class="mt-6"
+            novalidate>
+            <h2
+                class="section-title">
+                INFORMAÇÕES IMPORTANTES
+            </h2>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 md:gap-8">
+                <div
+                    class="input-group">
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        class="input-field"
+                        placeholder=" "
+                        required
+                        data-error-required="Este campo é obrigatório." />
+                    <label
+                        for="fullName"
+                        class="input-label">
+                        Nome Completo
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+                <div class="input-group">
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="input-field"
+                        placeholder=" "
+                        required
+                        data-error-required="O email é obrigatório."
+                        data-error-pattern="Formato de email inválido." />
+                    <label
+                        for="email"
+                        class="input-label">
+                        Email
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        class="input-field"
+                        placeholder=" "
+                        pattern="\(\d{2}\)\s\d{5}-\d{4}"
+                        required
+                        data-error-required="O este campo é obrigatório."
+                        data-error-pattern="O formato de telefone exigido é (XX) XXXXX-XXXX." />
+                    <label
+                        for="phone"
+                        class="input-label">
+                        Contato
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+            </div>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 md:gap-8">
+                <div
+                    class="input-group">
+                    <input
+                        type="text"
+                        id="plate"
+                        name="plate"
+                        class="input-field"
+                        placeholder=" "
+                        pattern="[A-Z]{3}[0-9][A-Z0-9][0-9]{2}"
+                        required
+                        data-error-required="Este campo é obrigatório."
+                        data-error-pattern="Formato de placa inválida. Ex: ABC1D23" />
+                    <label
+                        for="plate"
+                        class="input-label">
+                        Placa
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="text"
+                        id="vehicleModel"
+                        name="vehicleModel"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="vehicleModel"
+                        class="input-label">
+                        Modelo do Veículo
+                    </label>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="text"
+                        id="color"
+                        name="color"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="color"
+                        class="input-label">
+                        Cor
+                    </label>
+                </div>
+            </div>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 md:gap-8">
+                <div
+                    class="input-group">
+                    <input
+                        type="date"
+                        id="occurrenceDate"
+                        name="occurrenceDate"
+                        class="input-field"
+                        placeholder=" "
+                        required
+                        data-error-required="Este campo é obrigatório." />
+                    <label
+                        for="occurrenceDate"
+                        class="input-label">
+                        Data do Ocorrido
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="date"
+                        id="requestDate"
+                        name="requestDate"
+                        class="input-field"
+                        placeholder=" "
+                        readonly />
+                    <label
+                        for="requestDate"
+                        class="input-label">
+                        Data da Solicitação
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <select
+                    id="clientType"
+                    name="clientType"
+                    class="input-field"
+                    required
+                    data-error-required="Este campo é obrigatório">
+                    <option
+                        value=""
+                        disabled
+                        selected>
+                    </option>
+                    <option
+                        value="Avulso">
+                        Avulso
+                    </option>
+                    <option
+                        value="Mensalista">
+                        Mensalista
+                    </option>
+                    <option
+                        value="Credenciado">
+                        Credenciado (Condômino)
+                    </option>
+                </select>
+                <label
+                    for="clientType"
+                    class="input-label">
+                    Tipo do Cliente
+                </label>
+                <span class="error-message"></span>
+            </div>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 md:gap-8 items-end">
+                <fieldset
+                    class="input-group"
+                    data-error-required="Selecione uma forma de entrada.">
+                    <legend
+                        class="text-md text-gray-500 mb-2">
+                        Forma de Entrada
+                    </legend>
+                    <div
+                        class="flex justify-between items-center gap-x-2">
+                        <div
+                            class="flex items-center">
+                            <input
+                                type="radio"
+                                id="option-ticket"
+                                name="entryMethod"
+                                value="Ticket"
+                                class="radio-input"
+                                required />
+                            <label
+                                for="option-ticket"
+                                class="radio-label">
+                                Ticket
+                            </label>
+                        </div>
+                        <div
+                            class="flex items-center">
+                            <input
+                                type="radio"
+                                id="option-cartao"
+                                name="entryMethod"
+                                value="Cartão"
+                                class="radio-input" />
+                            <label
+                                for="option-cartao"
+                                class="radio-label">
+                                Cartão
+                            </label>
+                        </div>
+                        <div
+                            class="flex items-center">
+                            <input
+                                type="radio"
+                                id="option-tag"
+                                name="entryMethod"
+                                value="Tag"
+                                class="radio-input" />
+                            <label
+                                for="option-tag"
+                                class="radio-label">
+                                Tag
+                            </label>
+                        </div>
+                        <div
+                            class="flex items-center">
+                            <input
+                                type="radio"
+                                id="option-placa"
+                                name="entryMethod"
+                                value="Leitura de Placa"
+                                class="radio-input" />
+                            <label
+                                for="option-placa"
+                                class="radio-label">
+                                Leitura de Placa
+                            </label>
+                        </div>
+                    </div>
+                    <span class="error-message"></span>
+                </fieldset>
+                <div
+                    id="entry-details-group"
+                    class="input-group hide">
+                    <input
+                        type="number"
+                        id="entryNumber"
+                        name="entryNumber"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        id="entryNumberLabel"
+                        for="entryNumber"
+                        class="input-label">
+                        Número 
+                    </label>
+                </div>
+            </div>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 md:gap-8">
+                <div
+                    class="input-group">
+                    <input
+                        type="time"
+                        id="entryTime"
+                        name="entryTime"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="entryTime"
+                        class="input-label">
+                        Horário de Entrada
+                    </label>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="time"
+                        id="exitTime"
+                        name="exitTime"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="exitTime"
+                        class="input-label">
+                        Horário de Saída
+                    </label>
+                </div>
+            </div>
+            
+            <div
+                id="location-fields-wrapper"
+                class="grid grid-cols-1 md:grid-cols-3 md:gap-8 gap-x-4">
+                <div
+                    class="input-group">
+                    <select
+                        id="building"
+                        name="building"
+                        class="input-field"
+                        required
+                        data-error-required="Este campo é obrigatório.">
+                        <option
+                            value=""
+                            disabled
+                            selected>
+                        </option>
+                        <option
+                            value="Alfred Nobel">
+                            Alfred Nobel
+                        </option>
+                        <option
+                            value="Charles Darwin">
+                            Charles Darwin
+                        </option>
+                        <option
+                            value="Isaac Newton">
+                            Isaac Newton
+                        </option>
+                        <option
+                            value="Thomas Edison">
+                            Thomas Edison
+                        </option>
+                    </select>
+                    <label
+                        for="building"
+                        class="input-label">
+                        Empresarial
+                    </label>
+                    <span class="error-message"></span>
+                </div>
+                <div
+                    id="company-input-group"
+                    class="input-group hide">
+                    <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="company"
+                        class="input-label">
+                        Em qual empresa trabalha
+                    </label>
+                </div>
+                <div
+                    class="input-group">
+                    <input
+                        type="number"
+                        id="roomNumber"
+                        name="roomNumber"
+                        class="input-field"
+                        placeholder=" " />
+                    <label
+                        for="roomNumber"
+                        class="input-label">
+                        Número da Sala
+                    </label>
+                </div>
+            </div>
+
+            <hr
+                class="my-6 border-gray-300">
+
+            <div
+                class="input-group">
+                <label
+                    for="occurrencePhotos"
+                    class="text-md text-gray-500">
+                    Fotos da avaria (Máx. 5 arquivos, 25MB total):
+                </label>
+                <input
+                    type="file"
+                    id="occurrencePhotos"
+                    name="occurrencePhotos"
+                    multiple
+                    accept="image/*"
+                    class="file-input"/>
+            </div>
+
+            <fieldset
+                class="input-group">
+                <legend
+                    class="text-md text-gray-500 mb-2">
+                    Foi atendido por algum funcionário(a)?
+                </legend>
+                <div
+                    class="flex items-center space-x-6">
+                    <div
+                        class="flex items-center">
+                        <input
+                            type="radio"
+                            id="attended-yes"
+                            name="attendedByEmployee"
+                            value="Sim"
+                            class="radio-input" />
+                        <label
+                            for="attended-yes"
+                            class="radio-label">
+                            Sim
+                        </label>
+                    </div>
+                    <div
+                        class="flex items-center">
+                        <input
+                            type="radio"
+                            id="attended-no"
+                            name="attendedByEmployee"
+                            value="Não"
+                            class="radio-input" />
+                        <label
+                            for="attended-no"
+                            class="radio-label">
+                            Não
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div
+                id="employee-name-wrapper"
+                class="input-group hide">
+                <input
+                    type="text"
+                    id="attendingEmployee"
+                    name="attendingEmployee"
+                    class="input-field"
+                    placeholder=" " />
+                <label
+                    for="attendingEmployee"
+                    class="input-label">
+                    Nome do Funcionário(a)
+                </label>
+            </div>
+
+            <h2
+                class="section-title">
+                Observações
+            </h2>
+            <div
+                class="input-group">
+                <textarea
+                    id="damageDescription"
+                    name="damageDescription"
+                    rows="4"
+                    class="input-field"
+                    placeholder=" "></textarea>
+                <label
+                    for="damageDescription"
+                    class="input-label">
+                    Por favor, descreva o que aconteceu
+                </label>
+            </div>
+
+            <div
+                class="flex justify-center mt-10">
+                <button
+                    type="submit"
+                    class="submit-button">
+                    Registrar Ocorrência
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <div
+        id="feedback-overlay"
+        class="feedback-overlay hide">
+        <div
+            id="loading-indicator"
+            class="hide">
+            <div
+                class="spinner"></div>
+            <p>
+                Enviando...
+            </p>
+        </div>
+        <div
+            id="success-message"
+            class="hide">
+            <svg
+                class="checkmark"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 52 52">
+                <circle
+                    class="checkmark-circle"
+                    cx="26"
+                    cy="26"
+                    r="25"
+                    fill="none"/>
+                <path
+                    class="checkmark-check"
+                    fill="none"
+                    d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <p>
+                Seu formulário foi enviado com sucesso!
+            </p>
+        </div>
+        <div
+            id="error-message"
+            class="hide">
+            <svg
+                class="cross"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 52 52">
+                <circle
+                    class="cross-circle"
+                    cx="26"
+                    cy="26"
+                    r="25"
+                    fill="none" />
+                <path
+                    class="cross-path"
+                    fill="none"
+                    d="M16 16 36 36 M36 16 16 36" />
+            </svg>
+            <p>
+                Ocorreu um erro. Tente novamente.
+            </p>
+        </div>
+    </div>
+
+    <script
+        src="./js/script.js"></script>
+</body>
+</html>
