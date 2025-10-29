@@ -52,7 +52,8 @@
                     </label>
                     <span class="error-message"></span>
                 </div>
-                <div class="input-group">
+                <div
+                    class="input-group">
                     <input
                         type="email"
                         id="email"
@@ -60,8 +61,9 @@
                         class="input-field"
                         placeholder=" "
                         required
+                        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
                         data-error-required="O email é obrigatório."
-                        data-error-pattern="Formato de email inválido." />
+                        data-error-pattern="Formato de email inválido. Ex: nome@email.com" />
                     <label
                         for="email"
                         class="input-label">
@@ -190,15 +192,15 @@
                         selected>
                     </option>
                     <option
-                        value="Avulso">
+                        value="avulso">
                         Avulso
                     </option>
                     <option
-                        value="Mensalista">
+                        value="mensalista">
                         Mensalista
                     </option>
                     <option
-                        value="Credenciado">
+                        value="credenciado">
                         Credenciado (Condômino)
                     </option>
                 </select>
@@ -227,7 +229,7 @@
                                 type="radio"
                                 id="option-ticket"
                                 name="entryMethod"
-                                value="Ticket"
+                                value="ticket"
                                 class="radio-input"
                                 required />
                             <label
@@ -242,7 +244,7 @@
                                 type="radio"
                                 id="option-cartao"
                                 name="entryMethod"
-                                value="Cartão"
+                                value="cartao"
                                 class="radio-input" />
                             <label
                                 for="option-cartao"
@@ -256,7 +258,7 @@
                                 type="radio"
                                 id="option-tag"
                                 name="entryMethod"
-                                value="Tag"
+                                value="tag"
                                 class="radio-input" />
                             <label
                                 for="option-tag"
@@ -270,7 +272,7 @@
                                 type="radio"
                                 id="option-placa"
                                 name="entryMethod"
-                                value="Leitura de Placa"
+                                value="leitura_placa"
                                 class="radio-input" />
                             <label
                                 for="option-placa"
@@ -348,19 +350,19 @@
                             selected>
                         </option>
                         <option
-                            value="Alfred Nobel">
+                            value="alfred_nobel">
                             Alfred Nobel
                         </option>
                         <option
-                            value="Charles Darwin">
+                            value="charles_darwin">
                             Charles Darwin
                         </option>
                         <option
-                            value="Isaac Newton">
+                            value="isaac_newton">
                             Isaac Newton
                         </option>
                         <option
-                            value="Thomas Edison">
+                            value="thomas_edison">
                             Thomas Edison
                         </option>
                     </select>
@@ -415,7 +417,7 @@
                 <input
                     type="file"
                     id="occurrencePhotos"
-                    name="occurrencePhotos"
+                    name="occurrencePhotos[]"
                     multiple
                     accept="image/*"
                     class="file-input"/>
@@ -435,7 +437,7 @@
                             type="radio"
                             id="attended-yes"
                             name="attendedByEmployee"
-                            value="Sim"
+                            value="sim"
                             class="radio-input" />
                         <label
                             for="attended-yes"
@@ -449,7 +451,7 @@
                             type="radio"
                             id="attended-no"
                             name="attendedByEmployee"
-                            value="Não"
+                            value="nao"
                             class="radio-input" />
                         <label
                             for="attended-no"
@@ -564,7 +566,6 @@
         </div>
     </div>
 
-    <script
-        src="./js/script.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>

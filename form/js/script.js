@@ -3,13 +3,6 @@
  * Encapsula toda a lógica, seletores de DOM, manipulação de eventos e submissão.
  */
 const DamageFormManager = (() => {
-    // ---- CONFIGURAÇÕES E CONSTANTES ---- //
-    /* const WEBHOOK_URL = 'https://n8n-n8n.e5zlch.easypanel.host/webhook-test/formulario'; */
-/*     const OSTICKET_API_URL = 'https://recifepark.com/rpdemandas/api/tickets.json'; // MUDE AQUI
-    const OSTICKET_API_KEY = 'D1D4B41885D25B5F43727BDCC2AC7993'; // MUDE AQUI */
-    const PROXY_API_URL = 'http://localhost:3000/api/ticket'; // URL do seu proxy
-    const OSTICKET_TOPIC_ID = 1; // MUDE AQUI (Ex: 1 = Consultas Gerais, veja no Painel Admin)
-
     const MAX_FILES = 5;
     const MAX_SIZE_MB = 25;
 
@@ -134,11 +127,11 @@ const DamageFormManager = (() => {
     const eventHandlers = {
         handleClientTypeChange: event => {
             const { value } = event.target;
-            const isCompanyRequired = value === 'Mensalista' || value === 'Credenciado';
+            const isCompanyRequired = value === 'mensalista' || value === 'credenciado';
             ui.toggleVisibility(dom.companyInputGroup, isCompanyRequired);
             dom.locationFieldsWrapper.classList.toggle('company-hidden', !isCompanyRequired);
             
-            if (value === 'Avulso') {
+            if (value === 'avulso') {
                 dom.optionTicketRadio.checked = true;
                 dom.optionTicketRadio.dispatchEvent(new Event('change'));
                 const radioGroup = dom.optionTicketRadio.closest('fieldset');
@@ -151,7 +144,7 @@ const DamageFormManager = (() => {
         },
         handleEntryMethodChange: event => {
             const { value } = event.target;
-            if (value === 'Leitura de Placa') {
+            if (value === 'leitura_placa') {
                 ui.toggleVisibility(dom.entryDetailsGroup, false);
                 return;
             }
@@ -162,15 +155,16 @@ const DamageFormManager = (() => {
 
             const labelMap = { 'Ticket': 'Número do Ticket', 'Cartão': 'Número do Cartão', 'Tag': 'Número da Tag' };
             dom.entryDetailsLabel.textContent = labelMap[value] || 'Número / Nome';
-            dom.entryDetailsInput.type = (value === 'Ticket' || value === 'Cartão' || value === 'Tag') ? 'number' : 'text';
+            dom.entryDetailsInput.type = (value === 'ticket' || value === 'cartao' || value === 'tag') ? 'number' : 'text';
         },
         handleAttendedChange: event => {
-            ui.toggleVisibility(dom.employeeNameWrapper, event.target.value === 'Sim');
+            ui.toggleVisibility(dom.employeeNameWrapper, event.target.value === 'sim');
         },
         handleFormSubmit: async event => {
-            event.preventDefault();
-            
-            // ---- Bloco de Validação (IDÊNTICO AO ORIGINAL) ---- //
+            // 1. IMPEDE O ENVIO PADRÃO (sempre)
+            event.preventDefault(); 
+
+            // ---- Bloco de Validação (O seu código existente) ---- //
             let isFormValid = true;
             dom.form.querySelectorAll('.error-message').forEach(msg => msg.classList.remove('show'));
 
@@ -198,7 +192,6 @@ const DamageFormManager = (() => {
                     if (input.type === 'radio') {
                          parentGroup.querySelectorAll('.radio-input').forEach(radio => radio.classList.add('invalid-field'));
                     }
-
                 } else {
                     input.classList.remove('invalid-field');
                      if (input.type === 'radio') {
@@ -206,122 +199,55 @@ const DamageFormManager = (() => {
                     }
                 }
             }
-
-            if (!isFormValid) {
-                return;
-            }
             // ---- Fim do Bloco de Validação ---- //
 
-
-            // ---- NOVO BLOCO DE SUBMISSÃO (JSON para osTicket) ---- //
+            if (!isFormValid) {
+                return; // Para se a validação falhar
+            }
+            
+            // 2. SE FOR VÁLIDO, mostramos o loading e preparamos para o envio
             const originalButtonText = dom.submitButton.textContent;
             ui.setSubmitButtonState('Enviando...', true);
-            ui.showLoading();
+            ui.showLoading(); // Mostra o "Enviando..."
 
             try {
-                // 1. Coletar dados do formulário de forma fácil
+                // 3. Criamos o FormData (isto apanha os ficheiros automaticamente)
                 const formData = new FormData(dom.form);
-                const formProps = Object.fromEntries(formData.entries());
 
-                // 2. Formatar a mensagem principal (pode ser HTML)
-                // Usando os 'name' attributes do seu index.html
-                let messageBody = `
-                    <strong>Relatório de Avaria de Veículo</strong><br><br>
-                    <strong>Cliente:</strong> ${formProps.fullName}<br>
-                    <strong>Contato:</strong> ${formProps.phone}<br>
-                    <strong>Email:</strong> ${formProps.email} <br><br>
-                    
-                    <strong>Veículo:</strong><br>
-                    <strong>Placa:</strong> ${formProps.plate}<br>
-                    <strong>Modelo:</strong> ${formProps.vehicleModel || 'Não informado'}<br>
-                    <strong>Cor:</strong> ${formProps.color || 'Não informado'}<br><br>
-                    
-                    <strong>Ocorrência:</strong><br>
-                    <strong>Data do Ocorrido:</strong> ${formProps.occurrenceDate}<br>
-                    <strong>Data da Solicitação:</strong> ${formProps.requestDate}<br>
-                    <strong>Tipo de Cliente:</strong> ${formProps.clientType}<br>
-                    <strong>Forma de Entrada:</strong> ${formProps.entryMethod}<br>
-                    <strong>Detalhe (Ticket/Cartão/Tag):</strong> ${formProps.entryNumber || 'N/A'}<br>
-                    <strong>Horário Entrada:</strong> ${formProps.entryTime || 'Não informado'}<br>
-                    <strong>Horário Saída:</strong> ${formProps.exitTime || 'Não informado'}<br><br>
-
-                    <strong>Localização:</strong><br>
-                    <strong>Empresarial:</strong> ${formProps.building}<br>
-                    <strong>Empresa:</strong> ${formProps.company || 'N/A'}<br>
-                    <strong>Sala:</strong> ${formProps.roomNumber || 'Não informado'}<br><br>
-
-                    <strong>Atendimento:</strong><br>
-                    <strong>Atendido por funcionário:</strong> ${formProps.attendedByEmployee || 'Não'}<br>
-                    <strong>Nome do Funcionário:</strong> ${formProps.attendingEmployee || 'N/A'}<br><br>
-
-                    <strong>Observações:</strong><br>
-                    <p>${formProps.damageDescription || 'Nenhuma'}</p>
-                `;
-
-                // 3. Processar anexos em paralelo
-                const files = dom.occurrencePhotosInput.files;
-                const attachmentPromises = Array.from(files).map(file => 
-                    formatter.fileToBase64(file).then(base64Data => ({
-                        name: file.name,
-                        type: file.type,
-                        encoding: 'base64',
-                        data: base64Data
-                    }))
-                );
-                
-                const attachments = await Promise.all(attachmentPromises);
-
-                // 4. Montar o payload final do osTicket
-                const osTicketPayload = {
-                    name: formProps.fullName,
-                    email: formProps.email,
-                    subject: `Formulário de Avaria: ${formProps.plate} (${formProps.fullName})`,
-                    
-                    // A documentação do osTicket especifica o formato RFC 2397 para a mensagem
-                    message: `data:text/html;charset=utf-8,${encodeURIComponent(messageBody)}`,
-                    type: 'text/html', 
-                    
-                    source: 'API',
-                    topicId: OSTICKET_TOPIC_ID, 
-                    
-                    // Mapeando campos customizados do osTicket (se existirem)
-                    // O 'name' aqui deve ser o 'name' configurado no painel do osTicket
-                    phone: formProps.phone, 
-                    // Você pode adicionar outros campos customizados aqui.
-                    // Ex: 'plate': formProps.plate (se existir um campo 'plate' no osTicket)
-
-                    attachments: attachments
-                };
-
-                // 5. Enviar a requisição para o osTicket
-                const response = await fetch(PROXY_API_URL, {
+                // 4. Enviamos os dados para o mesmo 'avaria.php' com fetch()
+                const response = await fetch('avaria.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(osTicketPayload),
+                    body: formData, 
+                    // Não defina 'Content-Type', o navegador fá-lo-á
+                    // corretamente para 'multipart/form-data'
                 });
 
-                if (response.ok || response.status === 201) { // 201 Created é o sucesso
-                    ui.showSuccess();
-                    setTimeout(() => {
-                        dom.form.reset();
-                        formatter.setCurrentDate();
-                        ui.resetConditionalFields();
-                        ui.hideFeedback();
-                    }, 3000);
-                } else {
-                    const errorBody = await response.text();
-                    console.error('Falha no envio para o osTicket:', response.status, errorBody);
-                    throw new Error(`Falha no envio: ${response.status} ${response.statusText}. Detalhe: ${errorBody}`);
+                // 5. Lemos a resposta do PHP (que será JSON)
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    // Se o PHP retornar um erro (ex: 400 ou success: false)
+                    throw new Error(result.message || 'Erro desconhecido no servidor.');
                 }
+
+                // 6. SUCESSO!
+                ui.showSuccess(); // Mostra o 'checkmark' de sucesso
+                setTimeout(() => {
+                    dom.form.reset();
+                    formatter.setCurrentDate();
+                    ui.resetConditionalFields();
+                    ui.hideFeedback();
+                }, 3000); // Reseta o formulário após 3 segundos
+
             } catch (error) {
+                // 7. ERRO!
                 console.error('Erro no handleFormSubmit:', error);
-                ui.showError();
+                ui.showError(); // Mostra o 'X' de erro
                 setTimeout(() => {
                     ui.hideFeedback();
                 }, 3000);
             } finally {
+                // Restaura o botão em qualquer caso
                 ui.setSubmitButtonState(originalButtonText, false);
             }
         }
